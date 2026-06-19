@@ -19,33 +19,31 @@
 
     <main>
       <section>
-        <h2>概要</h2>
-        <p class="note">このサイトはアーチー（Archie）ポーカーの戦略解説と、事前レンダリングされたスターティングハンド一覧を静的に公開しています。ページ内のリンクからそれぞれの詳細ページへ移動できます。</p>
+        <h2>このサイトについて</h2>
+        <p class="note">このサイトは「アーチー（Archie）」ポーカーの戦略解説と、事前レンダリングしたスターティングハンド一覧を静的に公開するためのものです。複数のゲームを収容できる設計にしています。</p>
       </section>
 
-      <section class="quick-links">
-        <h2>素早いリンク</h2>
-        <ul>
-          <li>
-            <a href="starting-hands-integrated.html">戦略ガイド — starting-hands-integrated.html</a>
-            <p class="note">ルール説明、期待値(EV)の根拠、ハンド分類（Tier）などを含む統合ドキュメント。</p>
-          </li>
-          <li>
-            <a href="starting-hands-mobile.html">ハンド一覧（インタラクティブ） — starting-hands-mobile.html</a>
-            <p class="note">フィルタ/並べ替え/ページング付きのモバイル向けプリレンダ。ブラウザでの表示に負荷がある場合はPDFやZIPを利用してください。</p>
-          </li>
-          <li>
-            <a href="starting-hands.json">生データ (JSON)</a> · <a href="starting-hands.csv">CSV</a>
-            <p class="note">生データは大きいため、ブラウザで直接開くと動作が重くなる場合があります。ダウンロードしてローカルで解析することを推奨します。</p>
-          </li>
-        </ul>
+      <section>
+        <h2>ゲーム一覧</h2>
+        <div class="games">
+          <div class="game-card">
+            <p class="game-title">Archie（アーチー）</p>
+            <p class="game-desc">ルール解説・プリフロップ戦略・ハンド一覧を公開しています。以下のリンクから各ページへ移動してください。</p>
+            <p class="note"><a href="starting-hands-integrated.html">戦略ガイド</a> · <a href="starting-hands-mobile.html">ハンド一覧（モバイル）</a></p>
+          </div>
+
+          <div class="game-card">
+            <p class="game-title">（追加予定） 他のゲーム</p>
+            <p class="game-desc">将来的に別ゲームのドキュメントをここに追加できます。ゲームごとに専用ページやデータを配置して運用してください。</p>
+          </div>
+        </div>
       </section>
 
       <section>
         <h2>利用上の注意</h2>
         <ul class="note">
-          <li>表示に問題がある場合はブラウザのキャッシュをクリア、もしくはシークレットモードで開いてください。</li>
-          <li>大きなJSONは事前レンダ（静的HTML）に変換して配布すると安全です。必要なら自動生成ワークフローを作成します。</li>
+          <li>ページに問題がある場合、ブラウザのキャッシュをクリアするかシークレットウィンドウで開いてください。</li>
+          <li>大きな JSON は事前レンダした HTML の利用を推奨します。必要であれば自動でプリレンダするワークフローを追加します。</li>
         </ul>
       </section>
     </main>

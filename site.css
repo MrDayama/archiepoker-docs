@@ -1,14 +1,16 @@
-/* Minimal site styles for archiepoker-docs (updated) */
+/* Updated styles for archiepoker-docs */
 body{font-family: 'Hiragino Kaku Gothic ProN', Meiryo, 'Noto Sans JP', system-ui, -apple-system, 'Segoe UI', Roboto, Arial;line-height:1.8;margin:0;padding:0;color:#16213e;background:#f6f8fb}
 .container{max-width:980px;margin:0 auto;padding:1.25rem}
 header.site-header{background:#0b5fff;color:white;padding:1rem;border-bottom:4px solid #0739b6}
-header.site-header h1{margin:0;font-size:1.25rem}
+header.site-header h1{margin:0;font-size:1.4rem}
 nav.quick-nav{margin-top:8px;display:flex;gap:8px;flex-wrap:wrap}
 .quick-btn{background:white;color:#0b5fff;border:1px solid #cfe0ff;padding:8px 12px;border-radius:8px;text-decoration:none;display:inline-block}
 .quick-btn:hover{background:#eef6ff}
 main{padding:1rem 0}
-.quick-links ul{list-style:none;padding:0;margin:0;display:grid;grid-template-columns:1fr;gap:12px}
-.quick-links a{font-weight:600;color:#0b3fff}
+.games{display:grid;grid-template-columns:1fr;gap:12px}
+.game-card{background:white;border-radius:10px;padding:12px;border:1px solid #e6eef6}
+.game-title{font-weight:700;color:#0b3fff;margin:0}
+.game-desc{margin:6px 0 0 0;color:#334}
 .note{font-size:0.95rem;color:#334}
 footer{font-size:0.9rem;color:#666;padding:1rem;text-align:center}
-@media(min-width:700px){.quick-links ul{grid-template-columns:1fr 1fr}}
+@media(min-width:700px){.games{grid-template-columns:1fr 1fr}}
