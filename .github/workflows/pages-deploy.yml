@@ -1,0 +1,45 @@
+name: Deploy to GitHub Pages (Reusable)
+
+on:
+  push:
+    branches: [ main ]
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node (if needed)
+        if: test -f package.json
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies (if package.json)
+        if: test -f package.json
+        run: npm ci --silent
+
+      - name: Build (if build script exists)
+        if: test -f package.json && npm run | grep -q build
+        run: npm run build --silent || true
+
+      - name: Configure pages
+        uses: actions/configure-pages@v3
+
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v1
+        with:
+          path: '.'
+
+      - name: Deploy
+        uses: actions/deploy-pages@v1
