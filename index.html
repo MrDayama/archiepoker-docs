@@ -3,39 +3,54 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Archie Poker — Docs</title>
+  <title>Archie Poker — ドキュメント</title>
   <link rel="stylesheet" href="/site.css">
 </head>
 <body>
   <div class="container">
-    <header class="site-header"><h1>Archie Poker — Documentation</h1></header>
+    <header class="site-header">
+      <h1>Archie Poker — ドキュメント</h1>
+      <nav class="quick-nav">
+        <a class="quick-btn" href="starting-hands-integrated.html">戦略ガイド</a>
+        <a class="quick-btn" href="starting-hands-mobile.html">ハンド一覧（モバイル表示）</a>
+        <a class="quick-btn" href="starting-hands.html">元の一覧</a>
+      </nav>
+    </header>
+
     <main>
-      <p>This site hosts static docs and pre-rendered pages for the Archie Poker project. Use the links below to open the strategy guide and hand lists.</p>
-
       <section>
-        <h2>Quick links</h2>
+        <h2>概要</h2>
+        <p class="note">このサイトはアーチー（Archie）ポーカーの戦略解説と、事前レンダリングされたスターティングハンド一覧を静的に公開しています。ページ内のリンクからそれぞれの詳細ページへ移動できます。</p>
+      </section>
+
+      <section class="quick-links">
+        <h2>素早いリンク</h2>
         <ul>
-          <li><a href="starting-hands-integrated.html">Strategy guide — starting-hands-integrated.html</a>
-            <p>Comprehensive strategy overview: rules, EV reasoning, hand tiers and examples.</p></li>
-          <li><a href="starting-hands-mobile.html">Starting hands (interactive mobile view) — starting-hands-mobile.html</a>
-            <p>Pre-rendered mobile UI with filtering and paging for exploring starting hands.</p></li>
-          <li><a href="starting-hands.html">Starting hands (original)</a>
-            <p>Original pre-rendered listing.</p></li>
-          <li><a href="starting-hands.json">starting-hands.json</a> · <a href="starting-hands.csv">starting-hands.csv</a>
-            <p>Raw data files (may be large). Prefer the pre-rendered HTML for browsing.</p></li>
+          <li>
+            <a href="starting-hands-integrated.html">戦略ガイド — starting-hands-integrated.html</a>
+            <p class="note">ルール説明、期待値(EV)の根拠、ハンド分類（Tier）などを含む統合ドキュメント。</p>
+          </li>
+          <li>
+            <a href="starting-hands-mobile.html">ハンド一覧（インタラクティブ） — starting-hands-mobile.html</a>
+            <p class="note">フィルタ/並べ替え/ページング付きのモバイル向けプリレンダ。ブラウザでの表示に負荷がある場合はPDFやZIPを利用してください。</p>
+          </li>
+          <li>
+            <a href="starting-hands.json">生データ (JSON)</a> · <a href="starting-hands.csv">CSV</a>
+            <p class="note">生データは大きいため、ブラウザで直接開くと動作が重くなる場合があります。ダウンロードしてローカルで解析することを推奨します。</p>
+          </li>
         </ul>
       </section>
 
       <section>
-        <h2>Notes</h2>
-        <ul>
-          <li>If a page appears blank, try opening the direct URL above or clear browser cache.</li>
-          <li>Large JSON files can be slow to open in-browser; consider downloading or using the mobile view.</li>
+        <h2>利用上の注意</h2>
+        <ul class="note">
+          <li>表示に問題がある場合はブラウザのキャッシュをクリア、もしくはシークレットモードで開いてください。</li>
+          <li>大きなJSONは事前レンダ（静的HTML）に変換して配布すると安全です。必要なら自動生成ワークフローを作成します。</li>
         </ul>
       </section>
-
     </main>
-    <footer>Published via GitHub Pages — <a href="https://github.com/MrDayama/archiepoker-docs">Repository</a></footer>
+
+    <footer>公開: GitHub Pages — <a href="https://github.com/MrDayama/archiepoker-docs">リポジトリ</a></footer>
   </div>
 </body>
 </html>
