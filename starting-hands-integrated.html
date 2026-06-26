@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="ja">
+<head>
+    <link rel="stylesheet" href="/site.css">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Archie — スターティングハンド（モバイル）</title>
+<style>
+body{font-family:system-ui,-apple-system,'Hiragino Kaku Gothic ProN','Meiryo',sans-serif;margin:12px;color:#0b2540}
+header{display:flex;flex-direction:column;gap:8px}
+.controls{display:flex;flex-wrap:wrap;gap:8px}
+input[type=text]{flex:1;padding:8px;border:1px solid #ccc;border-radius:6px}
+select,button{padding:8px;border-radius:6px}
+.table{width:100%;border-collapse:collapse;margin-top:8px}
+.table th,.table td{border:1px solid #e6eef6;padding:6px;font-size:13px}
+.pager{display:flex;gap:8px;align-items:center;margin-top:8px}
+.badge{background:#eef6ff;padding:4px 8px;border-radius:12px}
+@media(min-width:700px){body{max-width:900px;margin:18px auto}}
+</style>
+<script id="sample-data" type="application/json" hidden>[]</script>
+</head>
+<body>
+<div style="max-width:980px;margin:12px auto;padding:12px">
+<div class="tabbar" style="margin-top:8px;display:flex;gap:8px;flex-wrap:wrap">
+  <button data-target="panel-strategy" class="tabbtn" style="padding:8px;border-radius:6px;border:1px solid #cbdff0;background:#eef6ff">Strategy</button>
+</div>
+<div class="tabpanels" style="margin-top:12px">
+
+<section id="strategy" style="margin-bottom:24px">
+<h1>Archie — Strategy (統合版)</h1>
+
+<div class="container">
+    <h1>ポーカー「アーチー（Archie）」戦略ガイド</h1>
+    <p>本ノートは、近年ミックスゲームで人気を集めているポーカーの変種「アーチー（Archie）」について、基本ルールとプリフロップの戦略についてまとめたものです。</p>
+
+    <h2>1. アーチー（Archie）の概要</h2>
+    <p>アーチーは、<strong>「5カード・トリプルドロー・ハイロー・スプリット（5-Card Triple Draw High-Low Split）」</strong>形式のポーカーゲームです。<br>最大の特徴は、ポットを獲得するために特定の強さ以上の役が必要となる<strong>「ダブル・クオリファイ（Double Qualifier）」</strong>制を採用している点です。</p>
+
+    <h2>2. ゲームの基本ルール</h2>
+    
+    <h3>進行とアクション</h3>
+    <ol>
+        <li>各プレイヤーに5枚のカードが裏向きに配られます。</li>
+        <li>合計3回のドロー（カード交換）ラウンドがあります。</li>
+        <li>ベッティングラウンドは、最初のディール後、および各ドロー後の合計4回行われます。</li>
+    </ol>
+
+    <h3>クオリファイ（役の資格条件）</h3>
+    <p>ポットは「最も強いハイハンド」と「最も強い（数字の低い）ローハンド」で半分ずつ分割（スプリット）されますが、それぞれ以下の条件（クオリファイ）を満たしている必要があります。</p>
+    <ul>
+        <li><strong>ハイハンドの条件</strong>: <strong>「9のペア以上」</strong>（※本プロジェクト・環境での基準。世間一般では6のペア以上で行われることもあります）。</li>
+        <li><strong>ローハンドの条件</strong>: <strong>「8以下（8-or-better）」</strong>（5枚のカードがすべて8以下で、ペアになっていないこと。ストレートやフラッシュはローには影響せず、Aは最も低いカードとして扱われます）。</li>
+    </ul>
+
+    <h3>ショーダウンと勝敗</h3>
+    <ul>
+        <li><strong>スプリット</strong>: ハイ・ローそれぞれの条件を満たしたプレイヤー同士でポットを分け合います。</li>
+        <li><strong>片方のみクオリファイの場合</strong>: もしローの条件を誰も満たせなかった場合、ハイの条件を満たしたプレイヤーがポットを総取り（Scoop）します（逆も同様）。</li>
+        <li><strong>誰もクオリファイなしの場合</strong>: 誰も条件を満たさなかった場合は、条件にかかわらずその時点で<strong>「最も強いハイハンド」</strong>を持つプレイヤーが総取りするのが最も一般的なルールです（※ハウスルールによっては、残っているプレイヤー全員でチョップ（分割）したり、次のゲームへ持ち越すルールが採用されることもあります）。</li>
+    </ul>
+
+    <h2>3. プリフロップ戦略と期待値（EV）</h2>
+    <p>アーチーにおけるプリフロップの戦略は、明確なハンドレンジ表が存在せず、<strong>ハイとローの「クオリファイ（資格）」を見据えたハンドの選別</strong>が極めて重要になります。</p>
+
+    <h3>期待値（EV）に基づいたハンド選定の基準</h3>
+    <ol>
+        <li><strong>スクープ（総取り）の可能性がEVを最大化する</strong><br>片方（例えばローのみ）しか勝てないハンドは、最大でもポットの半分（チョップ）しか獲得できません。両方で勝てる可能性（スクープポテンシャル）があるハンドは、期待獲得額が2倍になるためEVが跳ね上がります。</li>
+        <li><strong>「クオリファイ落ち」のリスク</strong><br>「ローを狙って引いた結果、8以下にならなかった」場合、ハイの役もなければポット獲得額はゼロになります。「片方のドローが外れても、もう片方でクオリファイできる保険」があるハンドはEVが高くなります。</li>
+        <li><strong>逆ドミネイト（相手に上回られる）リスク</strong><br>せっかくクオリファイを満たしても、相手のより強い役に負ければ意味がありません（例：9のペアでハイを満たしたが、相手はJのペアだった等）。</li>
+    </ol>
+
+    <h3>【具体例】EVに基づいたスターティングハンドの評価</h3>
+    <h4>🟢 高EV：スクープ・ポテンシャルハンド（最強）</h4>
+    <ul>
+        <li><strong>具体例</strong>: <code>A♥ 2♥ 3♥ 4♠ 9♠</code></li>
+        <li><strong>評価と理由</strong>: 1枚ドローすることで、最強のロー（Wheel）が完成するだけでなく、5を引けばストレートに、ハートを引けばフラッシュになります。スクープできる確率が最も高いです。</li>
+    </ul>
+
+    <h4>🟡 中〜高EV：強力な片側・完成ハンド</h4>
+    <ul>
+        <li><strong>具体例</strong>: <code>K♠ K♦ K♣ 4♥ 9♦</code> （Kのスリーカード）</li>
+        <li><strong>評価と理由</strong>: ローになる可能性はゼロですが、ハイのクオリファイを最初から大きく上回る強力な完成ハンドです。スタンドパットか1枚ドローで強気にベットします。</li>
+    </ul>
+
+    <h4>🔴 低EV：逆ドミネイトの危険を伴うロー・ドロー（ハイリスク・ハンド）</h4>
+    <ul>
+        <li><strong>具体例</strong>: <code>2♠ 4♦ 5♣ 7♥ J♠</code></li>
+        <li><strong>評価と理由</strong>: <strong>要注意。</strong>A（エース）を含んでいないことが致命的です。完成しても相手のA持ちのローに負ける（これを逆ドミネイトと呼びます）ため、相手に負けているリスクが常につきまとう見た目以上にEVが低いハンドです。</li>
+    </ul>
+
+    <h4>🔴 低EV：マージナル（境界線上）なハイ</h4>
+    <ul>
+        <li><strong>具体例</strong>: <code>9♠ 9♣ 2♦ 5♥ J♠</code></li>
+        <li><strong>評価と理由</strong>: <strong>フォールド推奨。</strong>クオリファイギリギリであり、トリプルドローの間に相手に高確率で上のペアを作られます。EVはマイナスになりがちです。</li>
+    </ul>
+
+    <h3>【表解】アーチー特化型ハンドレンジ詳細一覧（Tier分類）</h3>
+    <p>テキサスホールデムのような「13×13のグリッド表」は5枚ドローゲームには存在しませんが、<strong>「保持するカード（ブラケット内）＋捨てるカード数」</strong>という表記（例：<code>[A234]x</code>＝A234を残して1枚ドロー）を用いることで、ハンドレンジを明確に可視化できます。以下は、代表的なスターティングハンドの詳細な組み合わせ一覧です。</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tier</th>
+                <th>ハンド分類</th>
+                <th>ハンド構造（具体的な組み合わせ例）</th>
+                <th>ドロー</th>
+                <th>方向性</th>
+                <th>評価・詳細なプレイ指針</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="tier-s-plus">S+</td>
+                <td><strong>無敵のパット（完成手）</strong></td>
+                <td><code>[A2345]</code> (Nut Low/High Straight)<br><code>[A♥2♥3♥4♥5♥]</code> (Str. Flush)<br><code>[23456]</code>〜<code>[45678]</code> (Straight Low)<br><code>[AAKKK]</code>, <code>[KKKQQ]</code> (Full House)</td>
+                <td>0枚</td>
+                <td>スクープ/片側確実</td>
+                <td><strong>最強クラス。全ポジションで超強気。</strong>特にストレートフラッシュやA〜5のホイール等はハイ・ロー共に負けることがほぼなく、上限（キャップ）までレイズ・リレイズを重ねてポットを極限まで膨らませます。</td>
+            </tr>
+            <tr>
+                <td class="tier-s">S</td>
+                <td><strong>最強スクープドロー</strong></td>
+                <td><code>[A234] + 9</code> (4 Low + 9)<br><code>[A♥2♥3♥4♥]x</code> (Wheel+Flush)<br><code>[A♠2♠3♠] + [99]</code> (3 Low+Flush+Pair)<br><code>[A23] + [KK]</code> (3 Low + High Pair)</td>
+                <td>1〜2枚</td>
+                <td>スクープ</td>
+                <td><strong>全ポジションでレイズ参加。</strong>ローを作りつつ、9以上のペアやフラッシュなどのハイ役も同時に狙える無類の強さを持つコンボ・ドロー群です。UTGからでも強気に参加します。</td>
+            </tr>
+            <tr>
+                <td class="tier-s">S</td>
+                <td><strong>プレミアム1枚ドロー</strong></td>
+                <td><code>[A235]x</code>, <code>[A245]x</code>, <code>[A345]x</code><br><code>[A236]x</code>, <code>[A246]x</code><br><code>[A♥K♥Q♥J♥]x</code> (Nut Flush Draw)</td>
+                <td>1枚</td>
+                <td>ロー主導/ハイ主導</td>
+                <td><strong>アグレッシブにプレイ。</strong>Aを含むロー・ドローは逆ドミネイトの心配がない強力なローです。フラッシュドローもハイでの勝率が高く高評価です。</td>
+            </tr>
+            <tr>
+                <td class="tier-a">A</td>
+                <td><strong>強いコンボ/ハイドロー</strong></td>
+                <td><code>[A2x] + [99]</code> (2 Low + High Pair)<br><code>[A3] + [QQ]</code> (2 Low + High Pair)<br><code>[KKK]xy</code>, <code>[AAA]xy</code> (Trips)</td>
+                <td>1〜2枚</td>
+                <td>両狙い/ハイ主導</td>
+                <td><strong>アーリー〜レイトで参加。</strong>ペア＋2枚ローなどの組み合わせは柔軟性が高く、状況に応じてドロー枚数を変えて戦えます。「トリップス（KKKなど）」はキッカーを残して1枚ドローで強気に圧力をかけます。</td>
+            </tr>
+            <tr>
+                <td class="tier-a">A</td>
+                <td><strong>ラフな1枚ロードロー</strong></td>
+                <td><code>[2347]x</code><br><code>[2358]x</code><br><code>[2467]x</code></td>
+                <td>1枚</td>
+                <td>ロー主導</td>
+                <td>Aを含まないものの、十分に強い完成形が見込める1枚ロードローです（例：2347からAや5を引く）。ただし相手のドロー枚数やアクションには注意が必要です。</td>
+            </tr>
+            <tr>
+                <td class="tier-b">B</td>
+                <td><strong>ハイリスク・ドロー</strong></td>
+                <td><code>[2345]x</code>, <code>[3457]x</code> (Aなし Low)<br><code>[A♥2♥3♥]xx</code> (3 Low + Flush draw)<br><code>[A23]xx</code> (3-card nut low)</td>
+                <td>1〜2枚</td>
+                <td>ロー主導</td>
+                <td><strong>ミドル〜レイト向け（要注意）。</strong>「Aなしの4枚ロー」は完成してもA持ちに負けるリスクが常につきまといます。「3枚ロー」も投資対効果が低く、ポジションが悪い場合はフォールドします。</td>
+            </tr>
+            <tr>
+                <td class="tier-b">B</td>
+                <td><strong>マージナルなハイペア</strong></td>
+                <td><code>[AA]xxx</code><br><code>[KK]xxx</code><br><code>[QQ]xxx</code></td>
+                <td>3枚</td>
+                <td>ハイ専</td>
+                <td><strong>レイトポジション限定。</strong>「3枚交換」は完成率が低く弱いため、アーリーからは参加不可です。前に誰も参加していない場合のみ、ボタン付近からスチール目的でレイズ参加します。</td>
+            </tr>
+            <tr>
+                <td class="tier-c">C</td>
+                <td><strong>限界レンジ（投機的）</strong></td>
+                <td><code>[JJ]xxx</code>, <code>[TT]xxx</code>, <code>[99]xxx</code><br><code>[234]xx</code>, <code>[345]xx</code><br><code>[AA22]x</code> (High-Low Two Pair)</td>
+                <td>2〜3枚</td>
+                <td>片側のみ</td>
+                <td><strong>全ポジションでフォールド推奨。</strong>ギリギリの9のペアからの3枚ドロー、Aなしの3枚ロードローは完全にオッズに合いません。またツーペア（AA22など）はフルハウスへのアウツを自分で潰しており、ローの目もない罠ハンドです。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. 確率計算と期待値の根拠（数学的裏付け）</h2>
+    <h3>① 4 to Wheel（最強のロー・ドロー）が完成する確率</h3>
+    <p>例えば <code>A-2-3-4</code> を持っている場合、残りの1枚を引いて「8-or-better」を完成させる確率を計算します。</p>
+    <ul>
+        <li><strong>アウツ（当たり牌）</strong>: 5, 6, 7, 8 の4ランク × 4枚 ＝ <strong>16枚</strong></li>
+        <li><strong>見えないカード</strong>: 52枚 － 手札5枚 ＝ <strong>47枚</strong></li>
+        <li>1回目のドローで外れる確率: 31 / 47 (約66.0%)</li>
+        <li>2回目のドローで外れる確率: 30 / 46 (約65.2%)</li>
+        <li>3回目のドローで外れる確率: 29 / 45 (約64.4%)</li>
+    </ul>
+    <p>3回すべて外れる確率は約27.7%。よって<strong>完成する確率は約72.3%</strong>となり、非常に高EVとなります。</p>
+
+    <h3>② Aなしロー・ドローにおける逆ドミネイトの数学</h3>
+    <p>逆ドミネイトのリスクを伴う <code>2-4-5-7-x</code> でローを完成させようとする場合、アウツは「A, 3, 6, 8」の16枚であり、完成する確率は同様に<strong>約72.3%</strong>です。しかし最大の問題は<strong>完成しても負ける確率（逆ドミネイト）</strong>です。相手もローに向かっていれば、相手は「Aを含む強いロー」を持っている確率のほうが数学的に高くなり、EVがマイナスに直結します。</p>
+
+    <h3>③ マージナルなハイ（9のペア）の限界</h3>
+    <p>「9のペア」をキープして3枚ドローする場合、1回で9を引く確率は約12.5%です。トリプルドロー全体を通しても、9がスリーカードに改善する確率は<strong>約30〜35%</strong>にとどまります。相手が上のペアを作ってくる確率も高いため、勝率は極めて低くなります。</p>
+
+    <h2>5. 戦略の基本ポイント</h2>
+
+    <h3>ラウンド別ベットサイズ（スモールベット／ビッグベット）の影響</h3>
+    <p>アーチーはフィックスドリミットで行われ、前半と後半でベットサイズが2倍に変わります。</p>
+    <ul>
+        <li><strong>スモールベット（1〜2ラウンド）</strong>: ポットを構築し弱いハンドをふるい落とすフェーズ。強いドローは積極的にレイズします。</li>
+        <li><strong>ビッグベット（3〜4ラウンド）</strong>: ベット額が倍になるため、オッズの半減に注意が必要です。片側（ローのみ等）しか勝てる見込みがないハンドは、獲得できるポットが半分になるため実質オッズが合わなくなり、フォールドの重要性が増します。</li>
+    </ul>
+
+    <h3>ドロー枚数のセオリーと考察（リーディングと自身のアクション）</h3>
+    <p>相手のハンドを読むための情報源であると同時に、自身の勝率を最大化するための数学的セオリーが存在します。</p>
+    <ul>
+        <li><strong>① 0枚交換（パット）</strong>: 強力な完成ハンド。不用意なパットブラフは極めて危険です。</li>
+        <li><strong>② 1枚交換（ドロー1）</strong>: 非常に強いテンパイ（4 to a Wheel等）。また、自分が「スリーカード」でフルハウスを狙う際、<strong>不要な2枚を捨てて「2枚交換」するよりも、キッカー（A等）を残して「1枚交換」する方が、1回のドローでフルハウス以上に改善する確率が高い（約5.9% vs 約8.5%）</strong>という特有のセオリーがあります。</li>
+        <li><strong>③ 2枚交換（ドロー2）</strong>: アーチーでの「3枚からのロードロー」はオッズに合わないため、強気に2枚交換する相手は「スリーカード以上のハイハンド」を高確率で持っています。</li>
+        <li><strong>④ 3枚交換（ドロー3）</strong>: ギリギリのペアからの改善狙いなど。マルチウェイでは引けなければ降りる投機的プレイヤーです。</li>
+    </ul>
+
+    <h3>ポジションとアグレッション</h3>
+    <ul>
+        <li><strong>アーリーポジション</strong>: 非常にタイトにプレイし、最強ドローや完成ハンドでのみ参加します。</li>
+        <li><strong>レイトポジション</strong>: アクションがなければ、マージナルなドローでもレイズしてスチールを狙うことが可能です。</li>
+    </ul>
+
+    <div class="alert">
+        <strong>※注意点</strong><br>
+        アーチーはハウス（カジノやホームゲーム）によって、誰もクオリファイしなかった場合の処理など、ローカルルールが存在することが多いゲームです。プレイ前には必ずルールの確認を行うことが推奨されています。
+    </div>
+
+    <div class="footer">
+        出力日時: 2026-06-15 | 生成元: Archie Poker Strategy Guide (Obsidian)
+    </div>
+</div>
+
+</section>
+</div>
+</div>
+
+<script>
+(function(){
+  const tabs = document.querySelectorAll('.tabbtn');
+  const panels = document.querySelectorAll('.tabpanels > *');
+  function activate(target){
+    panels.forEach(p=>{ if(p.id===target){ p.style.display='block' } else { p.style.display='none' } });
+    tabs.forEach(b=>{ b.style.background = (b.getAttribute('data-target')===target)?'#eef6ff':'#fff'; });
+  }
+  tabs.forEach(b=>{ b.addEventListener('click', ()=> activate(b.getAttribute('data-target'))) });
+  const strat = document.getElementById('strategy'); if(strat) strat.id='panel-strategy';
+  const container = document.querySelector('.tabpanels');
+  if(container){
+    const ps = ['panel-strategy'];
+    ps.forEach(id=>{ const el = document.getElementById(id); if(el && el.parentNode!==container) container.appendChild(el); });
+    Array.from(container.children).forEach(c=>c.style.display='none');
+    if(document.getElementById('panel-strategy')) activate('panel-strategy');
+  }
+})();
+</script>

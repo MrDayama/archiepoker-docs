@@ -1,0 +1,200 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポーカー「セブンカードスタッド（7-Card Stud）」戦略ガイド</title>
+    <style>
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN", "Hiragino Sans", Meiryo, sans-serif; line-height: 1.6; color: #333; background-color: #f5f5f7; padding: 20px; margin: 0; }
+        .container { max-width: 880px; margin: 0 auto; background: #fff; padding: 30px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.05); }
+        h1 { font-size: 1.8rem; border-bottom: 2px solid #28a745; padding-bottom: 10px; color: #28a745; }
+        h2 { font-size: 1.5rem; margin-top: 35px; border-bottom: 1px solid #ddd; padding-bottom: 5px; color: #222; }
+        h3 { font-size: 1.25rem; margin-top: 25px; color: #444; border-left: 4px solid #28a745; padding-left: 10px;}
+        h4 { font-size: 1.1rem; color: #555; margin-bottom: 5px; margin-top: 20px;}
+        p { margin-bottom: 15px; }
+        ul, ol { margin-bottom: 15px; padding-left: 25px; }
+        li { margin-bottom: 8px; }
+        code { background: #f0f0f0; padding: 3px 6px; border-radius: 4px; font-family: Consolas, Monaco, monospace; color: #d63384; font-size: 0.95em; }
+        .alert { background: #f4f9f4; border-left: 4px solid #28a745; padding: 15px; margin: 20px 0; border-radius: 4px; font-size: 0.95em; }
+        strong { color: #111; font-weight: 600; }
+        table { width: 100%; border-collapse: collapse; margin: 20px 0; font-size: 0.95em; }
+        th, td { border: 1px solid #ddd; padding: 10px 12px; text-align: left; vertical-align: top; }
+        th { background-color: #f8f9fa; font-weight: bold; color: #333; text-align: center; }
+        td:nth-child(1), td:nth-child(4) { text-align: center; }
+        .tier-s-plus { font-weight: bold; color: #900C3F; }
+        .tier-s { font-weight: bold; color: #dc3545; }
+        .tier-a { font-weight: bold; color: #e67e22; }
+        .tier-b { font-weight: bold; color: #f1c40f; }
+        .tier-c { font-weight: bold; color: #6c757d; }
+        .footer { margin-top: 40px; font-size: 0.85em; color: #777; border-top: 1px solid #eee; padding-top: 20px; text-align: center; }
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px; border-radius: 8px; box-shadow: none; }
+            h1 { font-size: 1.5rem; }
+            h2 { font-size: 1.3rem; }
+            table { font-size: 0.85em; display: block; overflow-x: auto; white-space: nowrap; }
+            th, td { padding: 8px; }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <h1>ポーカー「セブンカードスタッド（7-Card Stud）」戦略ガイド</h1>
+    <p>本ノートは、テキサスホールデム普及以前に最も広くプレイされていた伝統的なポーカー「セブンカードスタッド」について、基本ルールとサードストリート（スターティングハンド）における戦術的な意思決定、および期待値（EV）の考え方をまとめたものです。</p>
+
+    <h2>1. セブンカードスタッドの概要</h2>
+    <p>セブンカードスタッドは、プレイヤー全員で共有する「コミュニティカード」が存在せず、各プレイヤーに最大7枚のカードが個別に配られるゲームです。そのうち<strong>「3枚が伏せカード（ダウンカード）」</strong>、<strong>「4枚が公開カード（アップカード）」</strong>となります。<br>最終的に自分に配られた7枚の中から最も強い5枚の組み合わせ（ハイハンド）を作って競い合います。</p>
+
+    <h2>2. ゲームの基本ルールと進行</h2>
+    
+    <h3>進行（ストリートごとの流れ）</h3>
+    <ol>
+        <li><strong>アンティ（Ante）</strong>: 全員が最初の強制ベット（アンティ）をポットに支払います。</li>
+        <li><strong>サードストリート（3rd Street）</strong>: 各プレイヤーに「伏せカード2枚」と「公開カード1枚」の計3枚が配られます。
+            <ul>
+                <li>公開カード（ドアカード）が最も弱いプレイヤーが、最初の強制ベット<strong>「ブリングイン（Bring-in）」</strong>を支払います。</li>
+                <li>スートの強さは <code>♠(最上) > ♥ > ♦ > ♣(最下)</code> の順で評価されます。</li>
+            </ul>
+        </li>
+        <li><strong>フォースストリート（4th Street）</strong>: 各自に「公開カード1枚」（合計4枚）が配られます。ここからは、公開されている手札が最も強いプレイヤーからアクションを行います。</li>
+        <li><strong>フィフスストリート（5th Street）</strong>: 「公開カード1枚」（合計5枚）が配られます。このラウンド以降、ベット額が倍（Big Bet）になります。</li>
+        <li><strong>シックスストリート（6th Street）</strong>: 「公開カード1枚」（合計6枚）が配られます。</li>
+        <li><strong>セブンスストリート（7th Street/River）</strong>: 最後のカードである「伏せカード1枚」（合計7枚）が各自に配られます。</li>
+        <li><strong>ショーダウン</strong>: 残ったプレイヤーが5枚の手札で役を競い、最も強いプレイヤーがポットを獲得します。</li>
+    </ol>
+
+    <h2>3. サードストリート（プリフロップ）戦略と期待値（EV）</h2>
+    <p>セブンカードスタッドにおいて、勝率と期待値（EV）を分ける最も重要な要素は<strong>「他人のアップカードの観察」</strong>と<strong>「ライブカード（生きているカード）の把握」</strong>です。</p>
+
+    <div class="alert">
+        <strong>⚠️ ライブカード（Alive）とデッドカード（Dead）</strong><br>
+        自分の欲しいカード（アウツ）が他のプレイヤーの公開カード（アップカード）として何枚見えているかを確認することは生命線です。自分のフラッシュドローやストレートドローに必要なスート・数字がすでに場に落ちている場合、そのハンドの価値（EV）は急激に低下します。
+    </div>
+
+    <h3>期待値（EV）を最大化するハンド選定基準</h3>
+    <ol>
+        <li><strong>「Rolled Up（スリーカード）」の破壊力</strong><br>最初に配られた3枚が同じランク（例：<code>A-A-A</code>）である状態を「Rolled Up」と呼びます。出現率は約0.15%（652回に1回）と極めて稀ですが、スタッドにおいて圧倒的な強さを誇り、無条件で上限までベットしてポットを構築すべき最強ハンドです。</li>
+        <li><strong>ハイペア（Big Pairs）の強さ</strong><br><code>A-A</code>や<code>K-K</code>などのハイペアは、スリーカードに次いで強いハンドです。ただし、自分のペアカードやキッカーが「ライブ」であることが重要です（例：自分が <code>A-A-Q</code> を持っている時、他人のアップカードにAやQが1枚も見えていなければEVは非常に高くなります）。</li>
+        <li><strong>2ウェイ・ポテンシャル（多重ドロー）</strong><br>3枚のカードで「フラッシュドロー」と「ストレートドロー」を同時に狙えるハンド（例：同スートの <code>5♥ 6♥ 7♥</code>）は、発展の選択肢が多く極めて高EVとなります。</li>
+    </ol>
+
+    <h3>【表解】サードストリート・ハンドレンジ詳細（Tier分類）</h3>
+    <p>サードストリートでの手札の強さと、それぞれのプレイ指針をTierごとに分類しました。プレイする際は、必ず**「アウツがどれだけ生きているか」**を前提とします。</p>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Tier</th>
+                <th>ハンド分類</th>
+                <th>手札の構造（具体例）</th>
+                <th>アウツのライブ条件</th>
+                <th>プレイ指針</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="tier-s-plus">S+</td>
+                <td><strong>Rolled Up（スリーカード）</strong></td>
+                <td><code>[A♠A♦] A♥</code> (Rolled Up Aces)<br><code>[J♣J♦] J♠</code><br><code>[3♥3♦] 3♣</code></td>
+                <td>不問 (常に最強)</td>
+                <td><strong>最強。</strong>スロープレイ（チェックで様子を見る）をせず、アグレッシブにレイズやリレイズを行い、可能な限り早い段階でポットを大きく膨らませます。</td>
+            </tr>
+            <tr>
+                <td class="tier-s">S</td>
+                <td><strong>プレミアム・ハイペア</strong></td>
+                <td><code>[A♠K♦] A♥</code> (Aces with K kicker)<br><code>[K♠Q♦] K♥</code> (Kings)<br><code>[Q♠J♦] Q♥</code> (Queens)</td>
+                <td>自分のペアカード（AやK）が場に**0枚**見えていること。</td>
+                <td><strong>非常に強力。</strong>他のプレイヤーにドローのオッズを与えないよう、レイズして人数を絞り込みます。アウツがデッドしている（すでに他人の場に見えている）場合は慎重に進めます。</td>
+            </tr>
+            <tr>
+                <td class="tier-a">A</td>
+                <td><strong>プレミアム・スリーフラッシュ</strong></td>
+                <td><code>[A♥K♥] Q♥</code> (A-K-Q 3-Flush)<br><code>[5♠6♠] 9♠</code> (Medium 3-Flush)</td>
+                <td>同じスートのカードが他のアップカードに**1枚以下**しか見えていないこと。</td>
+                <td><strong>積極的に参加。</strong>フラッシュが完成した際の強さは強力です。特にオーバーカード（AやKなど）を含むスリーフラッシュは、フラッシュが外れてもハイペアで勝てる保険があり高EVです。</td>
+            </tr>
+            <tr>
+                <td class="tier-a">A</td>
+                <td><strong>プレミアム・スリーストレート</strong></td>
+                <td><code>[Q♥J♦] T♠</code> (Q-J-T)<br><code>[8♣7♦] 6♠</code> (8-7-6)</td>
+                <td>ストレートの完成に必要な両端の数字が、場に**1枚以下**しか見えていないこと。</td>
+                <td><strong>有利なポジションでプレイ。</strong>フラッシュドローと同様にアウツがライブであることが絶対条件です。コネクター（数字が連続しているカード）が狭い場合は価値が下がります。</td>
+            </tr>
+            <tr>
+                <td class="tier-b">B</td>
+                <td><strong>ミドルペア & ローペア</strong></td>
+                <td><code>[J♠9♦] J♥</code> (Jacks)<br><code>[9♠8♦] 9♥</code> (Nines)<br><code>[5♠2♦] 5♥</code> (Fives)</td>
+                <td>自分のペアカードが場に**0枚**であり、かつキッカー（もう1枚）がオーバーカード（A, K等）であること。</td>
+                <td><strong>状況に応じて。</strong>ブリングインからのスチール（ポット奪取）や、対戦相手が少人数の場合に適しています。多くのプレイヤーが参加しているマルチウェイのポットではフォールド推奨です。</td>
+            </tr>
+            <tr>
+                <td class="tier-c">C</td>
+                <td><strong>限界ドロー（ラフハンド）</strong></td>
+                <td><code>[Q♥8♥] 2♥</code> (1ギャップ以上のスリーフラッシュ)<br><code>[J♦8♠] T♣</code> (ギャップありスリーストレート)<br><code>[2♦3♠] 4♥</code> (ローカードのみのストレート)</td>
+                <td>不問</td>
+                <td><strong>原則フォールド。</strong>アウツが完全にライブであっても、完成時の強さが低かったり、ドローの完成率が低すぎるため、長期的に見てEVはマイナスになります。</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h2>4. 確率計算とデッドカードの数学（期待値の根拠）</h2>
+
+    <h3>① スリーフラッシュからフラッシュが完成する確率（デッドカードの影響）</h3>
+    <p>サードストリートでスリーフラッシュ（同スート3枚）を持っているとき、セブンスストリートまでにフラッシュ（同スート5枚以上）が完成する確率の計算です。<br>この確率は、**他のプレイヤーに見えている同スートのカード（デッドカード）の枚数**によって劇的に変化します。</p>
+
+    <ul>
+        <li><strong>基本条件</strong>: プレイヤー数8人。サードストリート時点で自分に3枚配られ、他人のアップカードが7枚露出（合計10枚が判明）していると仮定します。</li>
+        <li>自分以外の見えないカード（残りデッキ）: 52 － 3（手札） － 7（他人のアップカード） ＝ <strong>42枚</strong></li>
+        <li>自分の求める同スートカード（アウツ）: 13（スート全枚数） － 3（手札） ＝ <strong>10枚</strong>（※他人のアップカードに1枚もない場合）</li>
+    </ul>
+
+    <table>
+        <thead>
+            <tr>
+                <th>他人の場に見えている同スート（デッドカード）</th>
+                <th>実質のアウツ残数</th>
+                <th>フラッシュの完成確率（4ドロー中2枚以上）</th>
+                <th>戦術的評価（EV）</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>0 枚（完全ライブ）</strong></td>
+                <td>10 枚</td>
+                <td><strong>約 41.5%</strong></td>
+                <td style="color: green; font-weight: bold;">極めて高い（積極的レイズ）</td>
+            </tr>
+            <tr>
+                <td><strong>1 枚</strong></td>
+                <td>9 枚</td>
+                <td><strong>約 36.1%</strong></td>
+                <td style="color: green; font-weight: bold;">高い（コール・ベット推奨）</td>
+            </tr>
+            <tr>
+                <td><strong>2 枚</strong></td>
+                <td>8 枚</td>
+                <td><strong>約 30.7%</strong></td>
+                <td style="color: orange; font-weight: bold;">普通（状況を見て参加）</td>
+            </tr>
+            <tr>
+                <td><strong>3 枚</strong></td>
+                <td>7 枚</td>
+                <td><strong>約 25.3%</strong></td>
+                <td style="color: red; font-weight: bold;">低い（フォールド検討）</td>
+            </tr>
+            <tr>
+                <td><strong>4 枚以上（デッド）</strong></td>
+                <td>6 枚以下</td>
+                <td><strong>約 19.8% 以下</strong></td>
+                <td style="color: grey; font-weight: bold;">フォールド（ゴミハンド化）</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>このように、デッドカードが数枚増えるだけで、完成確率は40%超から20%未満へと**半分以下に激減**します。これがセブンスタッドで「周りのカードを絶対に見落としてはいけない」とされる数学的理由です。</p>
+
+    <div class="footer">
+        ポーカー「セブンカードスタッド」戦略ガイド — Obsidian & AI 連携用リソース
+    </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>ハンド一覧（集約ビュー）</title>
+  <link rel="stylesheet" href="/site.css">
+  <style>
+    table { width:100%; border-collapse:collapse; }
+    th,td { padding:8px; border:1px solid #e6eef6; font-size:14px }
+    .small { font-size:12px; color:#666 }
+    .expand { cursor:pointer; color:#0b5fff; text-decoration:underline }
+    .example-list { margin:8px 0; display:flex; gap:6px; flex-wrap:wrap }
+    .chip { padding:6px 8px; background:#fff; border:1px solid #e6eef6; border-radius:6px }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <header class="site-header"><h1>ハンド一覧（集約ビュー）</h1></header>
+    <main>
+      <p class="note">等価クラスで集約したハンド一覧です。行を展開すると代表的な組み合わせが表示されます。EV列は事前計算結果があれば表示します。</p>
+
+      <div>
+        <label>検索: <input id="q" placeholder="AKQ..." /></label>
+        <label style="margin-left:12px">最小combos: <input id="minc" type="number" value="1" style="width:80px"/></label>
+        <button id="apply">適用</button>
+      </div>
+
+      <table id="summary-table" style="margin-top:12px">
+        <thead>
+          <tr><th>代表</th><th>スートパターン</th><th>combos</th><th>EV (pre-draw)</th><th>EV (draw)</th><th></th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </main>
+    <footer class="small">Generated summary: data/summary-starting-hands.json — EV data may be in data/summary-ev-pre-draw-top200.json and data/summary-draw-ev-top30.json</footer>
+  </div>
+
+<script>
+async function loadJSON(path){ try { const r=await fetch(path); if(!r.ok) return null; return await r.json(); } catch(e){return null} }
+
+function formatRankKey(rk){ if(!rk) return ''; return rk.replace(/(.{1})/g,'$1 ').trim(); }
+
+function rowHTML(g, preMap, drawMap){
+  const rk = g.rank_key || formatRankKey(g.rank_key);
+  const patt = g.pattern || '';
+  const combos = g.combos || 0;
+  const pre = preMap && preMap[g.rank_key] ? (preMap[g.rank_key].equity||preMap[g.rank_key].equity_pre||preMap[g.rank_key].equity) : (preMap && preMap[g.pattern] ? preMap[g.pattern].equity : null);
+  const draw = drawMap && drawMap[g.pattern] ? drawMap[g.pattern].ev : null;
+  const preTxt = pre==null? '—' : (Math.round(pre*1000)/10)+'%';
+  const drawTxt = draw==null? '—' : (Math.round(draw*1000)/10)+'%';
+  const id = 'row-'+Math.random().toString(36).slice(2,9);
+  return `
+<tr data-rk="${g.rank_key}" data-patt="${g.pattern}" data-combos="${combos}">
+  <td>${g.rank_key || ''}</td>
+  <td>${patt}</td>
+  <td>${combos}</td>
+  <td>${preTxt}</td>
+  <td>${drawTxt}</td>
+  <td><span class="expand" data-id="${id}">展開</span><div id="${id}" class="expanded" style="display:none;padding:8px"></div></td>
+</tr>`;
+}
+
+function attachExpand(){ document.querySelectorAll('.expand').forEach(el=>{
+  el.addEventListener('click', async (e)=>{
+    const id = e.target.dataset.id; const wrap = document.getElementById(id);
+    if(wrap.style.display==='none'){ // expand
+      wrap.innerHTML = '<div class="small">読み込み中...</div>';
+      // find row data
+      const tr = e.target.closest('tr'); const patt = tr.dataset.patt; const rk = tr.dataset.rk;
+      // show examples from globalSummary
+      const grp = window.summaryGroups.find(x=>x.pattern===patt && x.rank_key===rk);
+      if(!grp){ wrap.innerHTML = '<div class="small">詳細なし</div>'; wrap.style.display='block'; return; }
+      const ex = grp.examples || [];
+      let html = '<div class="example-list">';
+      for(const s of ex){ html += `<div class="chip">${s}</div>` }
+      html += '</div>';
+      html += `<div class="small">詳細はCSV/JSONからダウンロードしてください。</div>`;
+      wrap.innerHTML = html; wrap.style.display='block';
+    } else { wrap.style.display='none'; }
+  });
+}); }
+
+(async ()=>{
+  const summary = await loadJSON('/data/summary-starting-hands.json') || await loadJSON('data/summary-starting-hands.json');
+  const pred = await loadJSON('/data/summary-ev-pre-draw-top200.json') || await loadJSON('data/summary-ev-pre-draw-top200.json');
+  const draw = await loadJSON('/data/summary-draw-ev-top30.json') || await loadJSON('data/summary-draw-ev-top30.json');
+  const preMap = {};
+  if(pred && pred.results){ for(const r of pred.results){ if(r.rank_key) preMap[r.rank_key]=r; else if(r.pattern) preMap[r.pattern]=r; } }
+  const drawMap = {};
+  if(draw && draw.results){ for(const r of draw.results){ if(r.pattern) drawMap[r.pattern]=r; } }
+  if(!summary || !summary.groups){ document.querySelector('#summary-table tbody').innerHTML='<tr><td colspan="6">summary JSON が見つかりません。</td></tr>'; return; }
+  window.summaryGroups = summary.groups;
+  const tbody = document.querySelector('#summary-table tbody');
+  function render(list){ tbody.innerHTML='';
+    for(const g of list){ tbody.insertAdjacentHTML('beforeend', rowHTML(g, preMap, drawMap)); }
+    attachExpand();
+  }
+  render(summary.groups.slice(0,200));
+
+  document.getElementById('apply').addEventListener('click', ()=>{
+    const q = document.getElementById('q').value.trim();
+    const minc = parseInt(document.getElementById('minc').value||'1',10);
+    let list = summary.groups.filter(g=> (g.combos||0) >= minc);
+    if(q) list = list.filter(g=> (g.rank_key||'').includes(q) || (g.pattern||'').includes(q) );
+    render(list.slice(0,1000));
+  });
+})();
+</script>
+</body>
+</html>

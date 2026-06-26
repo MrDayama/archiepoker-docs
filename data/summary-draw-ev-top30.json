@@ -1,0 +1,219 @@
+{
+  "meta": {
+    "trials": 30,
+    "inner": 20,
+    "top": 30
+  },
+  "results": [
+    {
+      "rank_key": "A5432",
+      "pattern": "AAABC",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♠ 4♥ 5♦",
+      "ev": 0.5
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABAC",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♠ 5♦",
+      "ev": 0.3333333333333333
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABBC",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♥ 5♦",
+      "ev": 0.5166666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABCA",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♦ 5♠",
+      "ev": 0.5833333333333334
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABCB",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♦ 5♥",
+      "ev": 0.5666666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABCC",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♦ 5♦",
+      "ev": 0.3333333333333333
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "AABCD",
+      "combos": 144,
+      "example": "A♠ 2♠ 3♥ 4♦ 5♣",
+      "ev": 0.4166666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABAAC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♠ 5♦",
+      "ev": 0.4
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABABC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♥ 5♦",
+      "ev": 0.45
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABACA",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♦ 5♠",
+      "ev": 0.45
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABACB",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♦ 5♥",
+      "ev": 0.43333333333333335
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABACC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♦ 5♦",
+      "ev": 0.23333333333333334
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABACD",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♠ 4♦ 5♣",
+      "ev": 0.4666666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBAC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♠ 5♦",
+      "ev": 0.36666666666666664
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBBC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♥ 5♦",
+      "ev": 0.45
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBCA",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♦ 5♠",
+      "ev": 0.5166666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBCB",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♦ 5♥",
+      "ev": 0.4
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBCC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♦ 5♦",
+      "ev": 0.55
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABBCD",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♥ 4♦ 5♣",
+      "ev": 0.38333333333333336
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCAA",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♠ 5♠",
+      "ev": 0.48333333333333334
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCAB",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♠ 5♥",
+      "ev": 0.5166666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCAC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♠ 5♦",
+      "ev": 0.4166666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCAD",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♠ 5♣",
+      "ev": 0.48333333333333334
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCBA",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♥ 5♠",
+      "ev": 0.5833333333333334
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCBB",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♥ 5♥",
+      "ev": 0.2833333333333333
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCBC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♥ 5♦",
+      "ev": 0.4666666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCBD",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♥ 5♣",
+      "ev": 0.5666666666666667
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCCA",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♦ 5♠",
+      "ev": 0.38333333333333336
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCCB",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♦ 5♥",
+      "ev": 0.6333333333333333
+    },
+    {
+      "rank_key": "A5432",
+      "pattern": "ABCCC",
+      "combos": 144,
+      "example": "A♠ 2♥ 3♦ 4♦ 5♦",
+      "ev": 0.48333333333333334
+    }
+  ]
+}
