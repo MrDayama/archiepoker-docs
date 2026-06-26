@@ -1,54 +1,286 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ja">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>ドキュメント一覧 — Archie Poker</title>
-  <link rel="stylesheet" href="/site.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ポーカー戦略ガイド — Archie Poker Docs</title>
+    <meta name="description" content="アーチーポーカー・セブンカードスタッドの戦略ガイドと確率データを静的公開するサイトです。">
+    <style>
+        /* ===== ベース ===== */
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
+                         "Helvetica Neue", Arial, "Hiragino Kaku Gothic ProN",
+                         "Hiragino Sans", Meiryo, sans-serif;
+            line-height: 1.7;
+            color: #333;
+            background-color: #f5f5f7;
+            padding: 20px;
+            margin: 0;
+        }
+
+        .container {
+            max-width: 860px;
+            margin: 0 auto;
+            background: #fff;
+            padding: 36px 40px;
+            border-radius: 12px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.07);
+        }
+
+        /* ===== ヘッダー ===== */
+        .site-header {
+            text-align: center;
+            padding-bottom: 28px;
+            border-bottom: 2px solid #28a745;
+            margin-bottom: 32px;
+        }
+
+        .site-header h1 {
+            font-size: 2rem;
+            color: #28a745;
+            margin: 0 0 8px;
+            letter-spacing: 0.02em;
+        }
+
+        .site-header .subtitle {
+            color: #666;
+            font-size: 0.95rem;
+            margin: 0;
+        }
+
+        /* ===== セクション共通 ===== */
+        h2 {
+            font-size: 1.35rem;
+            color: #222;
+            border-bottom: 1px solid #e0e0e0;
+            padding-bottom: 6px;
+            margin-top: 36px;
+            margin-bottom: 16px;
+        }
+
+        /* ===== ゲームカード ===== */
+        .games {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-top: 16px;
+        }
+
+        .game-card {
+            border: 1px solid #e0e0e0;
+            border-radius: 10px;
+            padding: 20px 22px;
+            background: #fafafa;
+            transition: box-shadow 0.2s ease, transform 0.2s ease;
+            position: relative;
+        }
+
+        .game-card:hover {
+            box-shadow: 0 4px 14px rgba(40,167,69,0.15);
+            transform: translateY(-2px);
+        }
+
+        .game-card.coming-soon {
+            opacity: 0.55;
+            background: #f0f0f0;
+            cursor: default;
+        }
+
+        .game-card.coming-soon:hover {
+            box-shadow: none;
+            transform: none;
+        }
+
+        /* カードの左アクセントライン */
+        .game-card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: 0; bottom: 0;
+            width: 4px;
+            border-radius: 10px 0 0 10px;
+            background: #28a745;
+        }
+
+        .game-card.coming-soon::before {
+            background: #aaa;
+        }
+
+        .game-card .badge {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.08em;
+            color: #fff;
+            background: #28a745;
+            border-radius: 4px;
+            padding: 2px 7px;
+            margin-bottom: 8px;
+        }
+
+        .game-card.coming-soon .badge {
+            background: #999;
+        }
+
+        .game-card .game-title {
+            font-size: 1.05rem;
+            font-weight: 700;
+            color: #111;
+            margin: 0 0 8px;
+        }
+
+        .game-card .game-desc {
+            font-size: 0.88rem;
+            color: #555;
+            margin: 0 0 14px;
+            line-height: 1.6;
+        }
+
+        .game-links {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+        }
+
+        .game-links a {
+            display: inline-block;
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #28a745;
+            border: 1px solid #28a745;
+            border-radius: 6px;
+            padding: 4px 12px;
+            text-decoration: none;
+            transition: background 0.15s, color 0.15s;
+        }
+
+        .game-links a:hover {
+            background: #28a745;
+            color: #fff;
+        }
+
+        /* ===== アラート ===== */
+        .alert {
+            background: #f4f9f4;
+            border-left: 4px solid #28a745;
+            padding: 13px 16px;
+            margin: 20px 0;
+            border-radius: 4px;
+            font-size: 0.92rem;
+            color: #444;
+        }
+
+        .alert ul {
+            margin: 6px 0 0;
+            padding-left: 20px;
+        }
+
+        .alert li {
+            margin-bottom: 4px;
+        }
+
+        /* ===== フッター ===== */
+        footer {
+            margin-top: 40px;
+            padding-top: 18px;
+            border-top: 1px solid #eee;
+            text-align: center;
+            font-size: 0.83rem;
+            color: #999;
+        }
+
+        footer a {
+            color: #28a745;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== レスポンシブ ===== */
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 20px 16px; border-radius: 8px; box-shadow: none; }
+            .site-header h1 { font-size: 1.55rem; }
+            .games { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
 <body>
-  <div class="container">
+<div class="container">
+
+    <!-- ヘッダー -->
     <header class="site-header">
-      <h1>ドキュメント一覧</h1>    </header>
+        <h1>🃏 ポーカー戦略ガイド</h1>
+        <p class="subtitle">Archie Poker Docs — ゲームごとの戦略・確率データを公開しています</p>
+    </header>
 
     <main>
-      <section>
-        <h2>このサイトについて</h2>
-        <p class="note">このサイトは「アーチー（Archie）」ポーカーの戦略解説と、事前レンダリングしたスターティングハンド一覧を静的に公開するためのものです。複数のゲームを収容できる設計にしています。</p>
-      </section>
 
-      <section>
+        <!-- サイト概要 -->
+        <div class="alert">
+            このサイトでは、複数のポーカーゲームに関する<strong>戦略ガイド・スターティングハンド分類・期待値（EV）データ</strong>を静的ページとして公開しています。
+            各ゲームのカードから該当ページへ移動してください。
+        </div>
+
+        <!-- ゲーム一覧 -->
         <h2>ゲーム一覧</h2>
         <div class="games">
-          <div class="game-card">
-            <p class="game-title">Archie（アーチー）</p>
-            <p class="game-desc">ルール解説・プリフロップ戦略・ハンド一覧を公開しています。以下のリンクから各ページへ移動してください。</p>
-            <p class="note"><a href="starting-hands-integrated.html">戦略ガイド</a> · <a href="starting-hands-mobile.html">ハンド一覧（モバイル）</a></p>
-          </div>
 
-          <div class="game-card">
-            <p class="game-title">Seven Card Stud（セブンカードスタッド）</p>
-            <p class="game-desc">ルール解説、サードストリート（スターティングハンド）のTier分類、および他人のアップカードによる確率変動の数学的裏付けについてまとめています。</p>
-            <p class="note"><a href="Seven_Card_Stud_Strategy.html">戦略ガイド</a></p>
-          </div>
+            <!-- アーチー -->
+            <div class="game-card">
+                <span class="badge">公開中</span>
+                <p class="game-title">Archie（アーチー）</p>
+                <p class="game-desc">
+                    独自ルールのドローポーカー。プリフロップ戦略・スターティングハンドのTier分類・モンテカルロEV推定データを掲載しています。
+                </p>
+                <div class="game-links">
+                    <a href="starting-hands-integrated.html">📄 戦略ガイド</a>
+                    <a href="starting-hands-mobile.html">📱 ハンド一覧</a>
+                </div>
+            </div>
 
-          <div class="game-card">
-            <p class="game-title">（追加予定） 他のゲーム</p>
-            <p class="game-desc">将来的に別ゲームのドキュメントをここに追加できます。</p>
-          </div>
+            <!-- セブンカードスタッド -->
+            <div class="game-card">
+                <span class="badge">公開中</span>
+                <p class="game-title">Seven Card Stud（セブンカードスタッド）</p>
+                <p class="game-desc">
+                    伝統的なスタッドポーカー。サードストリートのTier分類・アップカード影響の数学的裏付けを掲載しています。
+                </p>
+                <div class="game-links">
+                    <a href="Seven_Card_Stud_Strategy.html">📄 戦略ガイド</a>
+                </div>
+            </div>
+
+            <!-- 追加予定 -->
+            <div class="game-card coming-soon">
+                <span class="badge">追加予定</span>
+                <p class="game-title">他のゲーム</p>
+                <p class="game-desc">
+                    将来的に別ゲームのドキュメントをここに追加できます。
+                </p>
+                <div class="game-links"></div>
+            </div>
+
         </div>
-      </section>
 
-      <section>
+        <!-- 利用上の注意 -->
         <h2>利用上の注意</h2>
-        <ul class="note">
-          <li>ページに問題がある場合、ブラウザのキャッシュをクリアするかシークレットウィンドウで開いてください。</li>
-          <li>大きな JSON は事前レンダした HTML の利用を推奨します。必要であれば自動でプリレンダするワークフローを追加します。</li>
-        </ul>
-      </section>
+        <div class="alert">
+            <ul>
+                <li>ページが正しく表示されない場合は、ブラウザのキャッシュをクリアするかシークレットウィンドウで開いてください。</li>
+                <li>大きな JSON データは事前レンダリングした HTML ページの利用を推奨します。</li>
+            </ul>
+        </div>
+
     </main>
 
-    <footer>公開: GitHub Pages — <a href="https://github.com/MrDayama/archiepoker-docs">リポジトリ</a></footer>
-  </div>
+    <footer>
+        公開: GitHub Pages —
+        <a href="https://github.com/MrDayama/archiepoker-docs" target="_blank" rel="noopener">リポジトリ (MrDayama/archiepoker-docs)</a>
+    </footer>
+
+</div>
 </body>
 </html>
